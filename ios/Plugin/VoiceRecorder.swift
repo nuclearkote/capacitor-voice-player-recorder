@@ -5,12 +5,10 @@ import AVFoundation
 @objc(VoiceRecorder)
 public class VoiceRecorder: CAPPlugin {
     
-    private var customMediaRecorder: CustomMediaRecorder? = nil
+    private var recording: Bool = false;
     
-    @objc func canDeviceVoiceRecord(_ call: CAPPluginCall) {
-        call.resolve(ResponseGenerator.successResponse())
-    }
-    
+    private let engine = AVAudioEngine()    // instance variable
+
     @objc func requestAudioRecordingPermission(_ call: CAPPluginCall) {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             if granted {
@@ -32,71 +30,47 @@ public class VoiceRecorder: CAPPlugin {
             return
         }
         
-        if(customMediaRecorder != nil) {
+        if(recording) {
             call.reject(Messages.ALREADY_RECORDING)
             return
         }
-        
-        customMediaRecorder = CustomMediaRecorder()
-        if(customMediaRecorder == nil) {
-            call.reject(Messages.CANNOT_RECORD_ON_THIS_PHONE)
-            return
-        }
-        
-        customMediaRecorder!.startRecording()
+        recording = true
+        start()
         call.resolve(ResponseGenerator.successResponse())
     }
     
     @objc func stopRecording(_ call: CAPPluginCall) {
-        if(customMediaRecorder == nil) {
+        if (!recording) {
             call.reject(Messages.RECORDING_HAS_NOT_STARTED)
             return
         }
-        
-        customMediaRecorder?.stopRecording()
-        
-        let audioFileUrl = customMediaRecorder?.getOutputFile()
-        if(audioFileUrl == nil) {
-            customMediaRecorder = nil
-            call.reject(Messages.FAILED_TO_FETCH_RECORDING)
-            return
-        }
-        let recordData = RecordData(
-            recordDataBase64: readFileAsBase64(audioFileUrl),
-            mimeType: "audio/aac",
-            msDuration: getMsDurationOfAudioFile(audioFileUrl)
-        )
-        customMediaRecorder = nil
-        if recordData.recordDataBase64 == nil || recordData.msDuration < 0 {
-            call.reject(Messages.FAILED_TO_FETCH_RECORDING)
-        } else {
-            call.resolve(ResponseGenerator.dataResponse(recordData.toDictionary()))
-        }
+         try! engine.stop()
+    }
+    
+    func start() {
+       let input = engine.inputNode
+       let bus = 0
+
+       input.installTap(onBus: bus, bufferSize: 262144, format: input.inputFormat(forBus: bus)) { (buffer, time) -> Void in
+        let data = self.toNSData(PCMBuffer: buffer)
+        let result = data.base64EncodedString()
+        let recordData = RecordData(recordDataBase64: result)
+        self.notifyListeners("audioRecorded", data: recordData.toDictionary())
+           // audio callback, samples in samples[0]...samples[buffer.frameLength-1]
+       }
+
+       try! engine.start()
+    }
+    
+    func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData {
+        let channelCount = 1  // given PCMBuffer channel count is 1
+        let channels = UnsafeBufferPointer(start: PCMBuffer.floatChannelData, count: channelCount)
+        let ch0Data = NSData(bytes: channels[0], length:Int(PCMBuffer.frameCapacity * PCMBuffer.format.streamDescription.pointee.mBytesPerFrame))
+        return ch0Data
     }
     
     func doesUserGaveAudioRecordingPermission() -> Bool {
         return AVAudioSession.sharedInstance().recordPermission == AVAudioSession.RecordPermission.granted
-    }
-    
-    func readFileAsBase64(_ filePath: URL?) -> String? {
-        if(filePath == nil) {
-            return nil
-        }
-        
-        do {
-            let fileData = try Data.init(contentsOf: filePath!)
-            let fileStream = fileData.base64EncodedString(options: NSData.Base64EncodingOptions.init(rawValue: 0))
-            return fileStream
-        } catch {}
-        
-        return nil
-    }
-    
-    func getMsDurationOfAudioFile(_ filePath: URL?) -> Int {
-        if filePath == nil {
-            return -1
-        }
-        return Int(CMTimeGetSeconds(AVURLAsset(url: filePath!).duration) * 1000)
     }
     
 }

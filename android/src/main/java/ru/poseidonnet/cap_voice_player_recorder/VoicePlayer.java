@@ -33,14 +33,11 @@ public class VoicePlayer extends Plugin {
     //    private AudioTrack track;
 //    private final Deque<byte[]> queue = new LinkedList<>();
 //    private int bufferLength;
-    private AACDecoderUtil aacDecoderUtil;
 
     @PluginMethod
     public void init(PluginCall call) {
 //        try {
         Context context = getContext();
-        aacDecoderUtil = new AACDecoderUtil();
-        aacDecoderUtil.prepare();
 //            bufferLength = call.getInt("bufferLength", 16384);
 //            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 //            audioManager.setMode(AudioManager.STREAM_MUSIC);
@@ -66,9 +63,6 @@ public class VoicePlayer extends Plugin {
 
     @PluginMethod
     public void destroy(PluginCall call) {
-        if (aacDecoderUtil != null) {
-            aacDecoderUtil.stop();
-        }
     }
 
     @PluginMethod()
@@ -84,7 +78,6 @@ public class VoicePlayer extends Plugin {
             return;
         }
         byte[] base64s = readBase64AsByteArray(base64);
-        aacDecoderUtil.decode(base64s, 0, base64s.length);
 //            queue.add(base64s);
 //            call.resolve(ResponseGenerator.successResponse());
 //        } catch (Exception e) {
