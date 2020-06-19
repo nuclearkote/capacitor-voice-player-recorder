@@ -35,10 +35,17 @@ public class VoiceRecorder: CAPPlugin {
             return
         }
         recording = true
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playAndRecord,
+                                         options:[.mixWithOthers])
+        } catch let error as NSError {
+            print("audioSession error: \(error.localizedDescription)")
+        }
         start()
         call.resolve(ResponseGenerator.successResponse())
     }
-    
+
     @objc func stopRecording(_ call: CAPPluginCall) {
         if (!recording) {
             call.reject(Messages.RECORDING_HAS_NOT_STARTED)
@@ -46,25 +53,28 @@ public class VoiceRecorder: CAPPlugin {
         }
          try! engine.stop()
     }
-    
+
     func start() {
        let input = engine.inputNode
-       let bus = 0
+        let audioFormat = AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 44100, channels: 1, interleaved: false)
+        try! engine.start()
 
-       input.installTap(onBus: bus, bufferSize: 262144, format: input.inputFormat(forBus: bus)) { (buffer, time) -> Void in
-        let data = self.toNSData(PCMBuffer: buffer)
-        let result = data.base64EncodedString()
-        let recordData = RecordData(recordDataBase64: result)
-        self.notifyListeners("audioRecorded", data: recordData.toDictionary())
-           // audio callback, samples in samples[0]...samples[buffer.frameLength-1]
-       }
-
-       try! engine.start()
+          input.installTap(onBus: 1, bufferSize: 262144, format: audioFormat, block: {
+              (buffer: AVAudioPCMBuffer!, time: AVAudioTime!) -> Void in
+           do {
+                  let data = self.toNSData(PCMBuffer: buffer)
+                  let result = data.base64EncodedString()
+                  let recordData = RecordData(recordDataBase64: result)
+                  self.notifyListeners("audioRecorded", data: recordData.toDictionary())
+              } catch {
+                  self.notifyListeners("recordError", data: ResponseGenerator.failResponse())
+              }
+          })
     }
-    
+
     func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData {
         let channelCount = 1  // given PCMBuffer channel count is 1
-        let channels = UnsafeBufferPointer(start: PCMBuffer.floatChannelData, count: channelCount)
+        let channels = UnsafeBufferPointer(start: PCMBuffer.int32ChannelData, count: channelCount)
         let ch0Data = NSData(bytes: channels[0], length:Int(PCMBuffer.frameCapacity * PCMBuffer.format.streamDescription.pointee.mBytesPerFrame))
         return ch0Data
     }
@@ -72,5 +82,5 @@ public class VoiceRecorder: CAPPlugin {
     func doesUserGaveAudioRecordingPermission() -> Bool {
         return AVAudioSession.sharedInstance().recordPermission == AVAudioSession.RecordPermission.granted
     }
-    
+
 }
