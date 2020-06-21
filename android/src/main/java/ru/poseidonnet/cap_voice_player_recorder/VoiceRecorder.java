@@ -58,7 +58,7 @@ public class VoiceRecorder extends Plugin {
         }
 
         int source = call.getInt("source", MediaRecorder.AudioSource.MIC);
-        int bufferLength = call.getInt("bufferLength", 16384);
+        int bufferLength = call.getInt("bufferLength", 262144);
         recorder = new Recorder(source, bufferLength);
         new Thread(recorder).start();
         call.resolve(ResponseGenerator.successResponse());
@@ -140,7 +140,8 @@ public class VoiceRecorder extends Plugin {
         }
 
         private String toBase64(byte[] bArray) {
-            return Base64.encodeToString(bArray, Base64.DEFAULT);
+//            java.util.Base64.getEncoder().encodeToString(bArray)
+            return Base64.encodeToString(bArray, Base64.NO_WRAP);
         }
 
         private void handleCodecInput(AudioRecord audioRecord) {
