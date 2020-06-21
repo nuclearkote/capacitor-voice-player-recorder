@@ -15,6 +15,9 @@
 		50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ADFFA52020D75100D50D53 /* Capacitor.framework */; };
 		50ADFFA82020EE4F00D50D53 /* VoiceRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 50ADFFA72020EE4F00D50D53 /* VoiceRecorder.m */; };
 		50E1A94820377CB70090CE1A /* VoiceRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E1A94720377CB70090CE1A /* VoiceRecorder.swift */; };
+		8574AC3F24A0244800FDC21C /* VoicePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8574AC3E24A0244800FDC21C /* VoicePlayer.swift */; };
+		8574AC4124A0254700FDC21C /* VoicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 8574AC4024A0254700FDC21C /* VoicePlayer.h */; };
+		8574AC4524A025D500FDC21C /* VoicePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8574AC4424A025D500FDC21C /* VoicePlayer.m */; };
 		85A89715249C48B000D6848C /*  in Resources */ = {isa = PBXBuildFile; fileRef = 85A89714249C48B000D6848C /*  */; };
 		8C81469723D50F42000F5E1B /* RecordData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C81469623D50F42000F5E1B /* RecordData.swift */; };
 		8CBB35B623D3557900842E4A /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBB35B523D3557900842E4A /* Messages.swift */; };
@@ -43,6 +46,9 @@
 		50ADFFA72020EE4F00D50D53 /* VoiceRecorder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceRecorder.m; sourceTree = "<group>"; };
 		50E1A94720377CB70090CE1A /* VoiceRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
 		5E23F77F099397094342571A /* Pods-Plugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Plugin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Plugin/Pods-Plugin.debug.xcconfig"; sourceTree = "<group>"; };
+		8574AC3E24A0244800FDC21C /* VoicePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoicePlayer.swift; sourceTree = "<group>"; };
+		8574AC4024A0254700FDC21C /* VoicePlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoicePlayer.h; sourceTree = "<group>"; };
+		8574AC4424A025D500FDC21C /* VoicePlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoicePlayer.m; sourceTree = "<group>"; };
 		85A89714249C48B000D6848C /*  */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ""; sourceTree = "<group>"; };
 		8C81469623D50F42000F5E1B /* RecordData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordData.swift; sourceTree = "<group>"; };
 		8CBB35B523D3557900842E4A /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
@@ -106,6 +112,9 @@
 				8CBB35B523D3557900842E4A /* Messages.swift */,
 				8CBB35CF23D4F8A200842E4A /* ResponseGenerator.swift */,
 				8C81469623D50F42000F5E1B /* RecordData.swift */,
+				8574AC3E24A0244800FDC21C /* VoicePlayer.swift */,
+				8574AC4024A0254700FDC21C /* VoicePlayer.h */,
+				8574AC4424A025D500FDC21C /* VoicePlayer.m */,
 			);
 			path = Plugin;
 			sourceTree = "<group>";
@@ -147,6 +156,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8574AC4124A0254700FDC21C /* VoicePlayer.h in Headers */,
 				50ADFF99201F53D600D50D53 /* VoiceRecorder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -314,7 +324,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8574AC4524A025D500FDC21C /* VoicePlayer.m in Sources */,
 				50E1A94820377CB70090CE1A /* VoiceRecorder.swift in Sources */,
+				8574AC3F24A0244800FDC21C /* VoicePlayer.swift in Sources */,
 				8CBB35D023D4F8A200842E4A /* ResponseGenerator.swift in Sources */,
 				8CBB35B623D3557900842E4A /* Messages.swift in Sources */,
 				8C81469723D50F42000F5E1B /* RecordData.swift in Sources */,

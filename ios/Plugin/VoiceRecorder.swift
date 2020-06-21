@@ -51,12 +51,13 @@ public class VoiceRecorder: CAPPlugin {
             call.reject(Messages.RECORDING_HAS_NOT_STARTED)
             return
         }
-         try! engine.stop()
+        recording = false
+        try! engine.stop()
     }
 
     func start() {
        let input = engine.inputNode
-        let audioFormat = AVAudioFormat(commonFormat: .pcmFormatInt32, sampleRate: 44100, channels: 1, interleaved: false)
+        let audioFormat = AVAudioFormat(commonFormat: .pcmFormatInt16, sampleRate: 44100, channels: 1, interleaved: false)
         try! engine.start()
 
           input.installTap(onBus: 1, bufferSize: 262144, format: audioFormat, block: {
@@ -74,7 +75,7 @@ public class VoiceRecorder: CAPPlugin {
 
     func toNSData(PCMBuffer: AVAudioPCMBuffer) -> NSData {
         let channelCount = 1  // given PCMBuffer channel count is 1
-        let channels = UnsafeBufferPointer(start: PCMBuffer.int32ChannelData, count: channelCount)
+        let channels = UnsafeBufferPointer(start: PCMBuffer.int16ChannelData, count: channelCount)
         let ch0Data = NSData(bytes: channels[0], length:Int(PCMBuffer.frameCapacity * PCMBuffer.format.streamDescription.pointee.mBytesPerFrame))
         return ch0Data
     }
