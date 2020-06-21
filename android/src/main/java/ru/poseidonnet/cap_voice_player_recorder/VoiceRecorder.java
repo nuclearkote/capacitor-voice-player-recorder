@@ -140,7 +140,6 @@ public class VoiceRecorder extends Plugin {
         }
 
         private String toBase64(byte[] bArray) {
-//            java.util.Base64.getEncoder().encodeToString(bArray)
             return Base64.encodeToString(bArray, Base64.NO_WRAP);
         }
 
@@ -165,8 +164,8 @@ public class VoiceRecorder extends Plugin {
 
         private AudioRecord createAudioRecord() {
             AudioRecord audioRecord = new AudioRecord(source, Parameters.SAMPLE_RATE,
-                    AudioFormat.CHANNEL_IN_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT, bufferLength * 10);
+                    Parameters.CHANNELS,
+                    Parameters.ENCODING, bufferLength * 10);
 
             if (audioRecord.getState() != AudioRecord.STATE_INITIALIZED) {
                 throw new RuntimeException("Unable to initialize AudioRecord");

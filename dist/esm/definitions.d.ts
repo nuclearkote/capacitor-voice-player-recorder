@@ -13,9 +13,7 @@ export interface GenericResponse {
     message: string;
 }
 export interface VoicePlayerPlugin {
-    init(): Promise<GenericResponse>;
     play(options: PlayOptions): Promise<GenericResponse>;
-    destroy(): Promise<GenericResponse>;
 }
 export interface VoiceRecorderPlugin {
     canDeviceVoiceRecord(): Promise<GenericResponse>;
@@ -30,8 +28,7 @@ export interface RecordOptions {
     source?: RecordSource;
 }
 export interface PlayOptions {
-    base64: string;
-    destination?: number;
+    url: string;
 }
 export declare enum RecordSource {
     DEFAULT = 0,
