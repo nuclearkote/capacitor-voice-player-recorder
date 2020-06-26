@@ -58,7 +58,7 @@ public class VoiceRecorder extends Plugin {
         }
 
         int source = call.getInt("source", MediaRecorder.AudioSource.VOICE_COMMUNICATION);
-        int bufferLength = call.getInt("bufferLength", 262144);
+        int bufferLength = call.getInt("bufferLength", 32768);
         recorder = new Recorder(source, bufferLength);
         new Thread(recorder).start();
         call.resolve(ResponseGenerator.successResponse());
