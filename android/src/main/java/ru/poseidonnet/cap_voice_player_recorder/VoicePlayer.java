@@ -39,24 +39,19 @@ public class VoicePlayer extends Plugin {
 
     @PluginMethod()
     public void play(PluginCall call) {
-        if (devices == null) {
-            AudioManager audioManager = (AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE);
-            devices = new HashMap<>();
-            final AudioDeviceInfo[] devices = audioManager.getDevices(android.media.AudioManager.GET_DEVICES_ALL);
-            for (AudioDeviceInfo device : devices) {
-                final int type = device.getType();
-                this.devices.put(type, device);
-            }
+        AudioManager audioManager = (AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.setSpeakerphoneOn(false);
+            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
         }
-
         String url = call.getString("url");
         if (url == null || url.trim().isEmpty()) {
             call.resolve(ResponseGenerator.failResponse());
             return;
         }
         MediaPlayer mediaPlayer = new MediaPlayer();
-        if (devices.containsKey(AudioDeviceInfo.TYPE_BUILTIN_EARPIECE)) {
-            mediaPlayer.setPreferredDevice(devices.get(AudioDeviceInfo.TYPE_BUILTIN_EARPIECE));
+        if (devices.containsKey(AudioDeviceInfo.TYPE_TELEPHONY)) {
+            mediaPlayer.setPreferredDevice(devices.get(AudioDeviceInfo.TYPE_TELEPHONY));
         }
         try {
             mediaPlayer.setDataSource(url);
