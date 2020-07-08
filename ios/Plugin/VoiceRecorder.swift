@@ -52,6 +52,7 @@ public class VoiceRecorder: CAPPlugin {
             return
         }
         recording = false
+        engine.inputNode.removeTap(onBus: 1)
         try! engine.stop()
     }
 
