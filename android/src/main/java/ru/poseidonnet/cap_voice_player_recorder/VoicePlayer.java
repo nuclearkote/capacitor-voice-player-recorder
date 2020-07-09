@@ -35,7 +35,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 )
 public class VoicePlayer extends Plugin {
 
-    private Map<Integer, AudioDeviceInfo> devices;
 
     @PluginMethod()
     public void play(PluginCall call) {
@@ -50,9 +49,6 @@ public class VoicePlayer extends Plugin {
             return;
         }
         MediaPlayer mediaPlayer = new MediaPlayer();
-        if (devices.containsKey(AudioDeviceInfo.TYPE_TELEPHONY)) {
-            mediaPlayer.setPreferredDevice(devices.get(AudioDeviceInfo.TYPE_TELEPHONY));
-        }
         try {
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
