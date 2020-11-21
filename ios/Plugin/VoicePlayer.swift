@@ -34,5 +34,13 @@ public class VoicePlayer: CAPPlugin {
         }
         call.resolve(ResponseGenerator.successResponse())
     }
+
+    @objc func enableSpeakerphone(_ call: CAPPluginCall) {
+
+    }
+
+    @objc func disableSpeakerphone(_ call: CAPPluginCall) {
+
+    }
     
 }

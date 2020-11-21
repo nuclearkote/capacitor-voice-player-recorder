@@ -59,4 +59,24 @@ public class VoicePlayer extends Plugin {
         }
     }
 
+    @PluginMethod()
+    public void enableSpeakerphone(PluginCall call) {
+        AudioManager audioManager = (AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.setSpeakerphoneOn(true);
+            audioManager.setMode(AudioManager.MODE_NORMAL);
+            call.resolve(ResponseGenerator.successResponse());
+        }
+    }
+
+    @PluginMethod()
+    public void disableSpeakerphone(PluginCall call) {
+        AudioManager audioManager = (AudioManager)getContext().getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.setSpeakerphoneOn(false);
+            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+            call.resolve(ResponseGenerator.successResponse());
+        }
+    }
+
 }

@@ -14,6 +14,8 @@ export interface GenericResponse {
 }
 export interface VoicePlayerPlugin {
     play(options: PlayOptions): Promise<GenericResponse>;
+    enableSpeakerphone(options: PlayOptions): Promise<GenericResponse>;
+    disableSpeakerphone(options: PlayOptions): Promise<GenericResponse>;
 }
 export interface VoiceRecorderPlugin {
     canDeviceVoiceRecord(): Promise<GenericResponse>;
